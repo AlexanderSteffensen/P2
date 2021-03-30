@@ -7,13 +7,21 @@ import {port, peerJSOptions} from './scripts/serverConfig.js'
 
 const server = express();
 const HTTPServer = createServer(server);
-const akvarioServer = new AkvarioServer(HTTPServer, peerJSOptions);
 
-server.use(bodyParser.json())
-server.use(express.static('public'));
-server.use(router);
+startServer();
 
-//listens to PORT set in /scripts/serverConfig.
+export function startServer(akvarioServer){
+
+    if (!akvarioServer)
+        new AkvarioServer(HTTPServer, peerJSOptions);
+
+
+    server.use(bodyParser.json())
+    server.use(express.static('public'));
+    server.use(router);
+}
+
+//listens to PORT set on top.
 HTTPServer.listen(port, () => {
-    console.log(`Welcome to Akvario @ *:${port}`);
+    console.log(`Server started @ *:${port}`);
 });

@@ -3,13 +3,14 @@ import {drawUser} from './login.js';
 import {enterRoom} from './client.js';
 import {spinBottle} from "./frontend-spinner.js";
 import {handlePeerConnections} from './voice.js';
+import {options, production} from './clientConfig.js';
 
 export class ClientConnection{
     socket;
     myID;
 
     constructor(options) {
-        this.socket = io(options)
+        this.socket = io(options);
         this.establishConnection();
     }
 
@@ -93,7 +94,7 @@ export class ClientConnection{
     }
 }
 
-const connection = new ClientConnection();
+const connection = new ClientConnection(options('main', production));
 
 export function startSpinner() {
     connection.startSpinner();

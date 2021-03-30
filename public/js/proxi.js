@@ -12,7 +12,7 @@ export function distance(position, positions){
 
     // Returns distance given a relative position.
     function dist(relPos){
-        return Math.sqrt((relPos.left * relPos.left) + (relPos.top * relPos.top));
+        return (Math.sqrt((relPos.left * relPos.left) + (relPos.top * relPos.top))).toFixed(4);
     }
 
     // Returns the position of pos2 relative to pos1
@@ -44,6 +44,7 @@ export function calculateVolume(myPosition, userCollection, volumeFunc){
 
     Object.keys(dist).forEach(key => (userCollection.get(key)).volume = volumeFunc(dist[key]));
 }
+
 
 
 

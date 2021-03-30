@@ -5,6 +5,7 @@ import {ConnectionTable} from "./connection.js";
 import {ColorPicker} from "../public/js/ColorPicker.js";
 import spin from './backend-spinner.js';
 
+
 // AkvarioServer controls all real time connection with users all users.
 export class AkvarioServer{
     io;
@@ -106,4 +107,8 @@ export class AkvarioServer{
         if(enabled) console.log(`PeerJS Server: ${client.id} Disconnected!`)
     }
 }
+
+
+
+
 
