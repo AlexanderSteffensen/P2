@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js -L"
+    "dev": "nodemon server.js -L",
     "test": "node test/AkvarioTest.js"
   },
   "dependencies": {

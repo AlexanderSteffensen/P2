@@ -52,3 +52,7 @@ body{
     position: absolute;
     left: calc(34px);
 }
+
+.selected {
+
+}
