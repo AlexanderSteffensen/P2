@@ -7,14 +7,19 @@ let io;
  * AkvarioServer controls all real time connection with users all users.
  * AkvarioServer sets up a socket server and handles emits sent by clients.
  * @param {any} HTTPServer - The http server.
+ * @param {boolean} testMode
  * */
-export function AkvarioServer(HTTPServer){
+export function AkvarioServer(HTTPServer, testMode){
     io = new socket_io.Server(HTTPServer);
     io.on('connection', (socket) => {
         const token = socket.handshake.auth.token
         if (user.get(token)){
             user.changeID(socket.id, token);
-
+            console.log(socket.id + ' connected.');
+            if(testMode){
+                socket.emit('connected');
+                socket.on('stop', () => HTTPServer.close());
+            }
             socket.broadcast.emit('new-user-connected', user.get(socket.id));
             socket.on('test', () => console.log('test'));
             socket.on('moved',  position => move(socket, position));
@@ -22,7 +27,7 @@ export function AkvarioServer(HTTPServer){
             socket.on('disconnect',   () => disconnect(socket));
             socket.on('user-speaking',  speaking => speak(socket, speaking));
             socket.on('start-spinner',  () => startSpinner(socket));
-            socket.on('sound-controls', (state, id) => soundControls(socket, state, id));
+            socket.on('sound-controls', state => soundControls(socket, state));
         }
         else socket.disconnect();
     });
@@ -47,11 +52,11 @@ function turn(socket, rotation){
 }
 
 function speak(socket, speaking){
-    socket.broadcast.emit('user-speaking', speaking, user.get(socket.id).gameID);
+    socket.broadcast.emit('user-speaking', user.get(socket.id).gameID, speaking);
 }
 
-function soundControls(socket, state, id){
-    socket.broadcast.emit('sound-controls', state, id);
+function soundControls(socket, state){
+    socket.broadcast.emit('sound-controls',user.get(socket.id).gameID, state);
 }
 
 export function emit(event, ...args){

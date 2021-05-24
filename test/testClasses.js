@@ -37,6 +37,10 @@ export class TestSuite{
         this.tests.push(() => this.test(func, input, output));
     }
 
+    addEventTest(input, expectedOutput){
+        this.tests.push(() => this.eventTest(input, expectedOutput));
+    }
+
     async test(func, input, output) {
         // Test the function, if the test fails it will throw an assertion error.
         Promise.resolve(func(...input))
@@ -55,6 +59,19 @@ export class TestSuite{
             })
     }
 
+    eventTest(input, expectedOutput){
+        const expectedEvents = Object.keys(expectedOutput);
+
+        expectedEvents.forEach(event => {
+            try{
+                assert.deepStrictEqual(input[event], expectedOutput[event]);
+            }
+            catch (err){
+                throw eventTestFailed(event, this.suiteName, err.actual, expectedOutput[event]);
+            }
+        });
+    }
+
     run(){
         this.tests.forEach(test => test());
     }
@@ -65,5 +82,11 @@ function testFailed(functionName, suiteName, input, output, expected){
     return functionName + ' has failed in ' + suiteName + '!\n' +
         'Received input : ' + JSON.stringify(input)  + '\n' +
         'Got output     : ' + JSON.stringify(output) + '\n' +
+        'Expected output: ' + JSON.stringify(expected);
+}
+
+function eventTestFailed(eventName, suiteName, input, expected){
+    return eventName + ' has failed ' + suiteName + '!\n' +
+        'Received output: ' + JSON.stringify(input)  + '\n' +
         'Expected output: ' + JSON.stringify(expected);
 }
